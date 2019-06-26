@@ -225,68 +225,6 @@ total.time
 # results.
 rpart.cv.2
 
-
-# Add bigrams to our feature matrix.
-train.tokens <- tokens_ngrams(train.tokens, n = 1:2)
-train.tokens[[357]]
-
-
-# Transform to dfm and then a matrix.
-train.tokens.dfm <- dfm(train.tokens, tolower = FALSE)
-train.tokens.matrix <- as.matrix(train.tokens.dfm)
-train.tokens.dfm
-
-
-# Normalize all documents via TF.
-train.tokens.df <- apply(train.tokens.matrix, 1, term.frequency)
-
-  
-# Calculate the IDF vector that we will use for training and test data!
-train.tokens.idf <- apply(train.tokens.matrix, 2, inverse.doc.freq)
-
-  
-# Calculate TF-IDF for our training corpus 
-train.tokens.tfidf <-  apply(train.tokens.df, 2, tf.idf, 
-                             idf = train.tokens.idf)
-
-  
-# Transpose the matrix
-train.tokens.tfidf <- t(train.tokens.tfidf)
-
-  
-# incomplete cases
-incomplete.cases <- which(!complete.cases(train.tokens.tfidf))
-train.tokens.tfidf[incomplete.cases,] <- rep(0.0, ncol(train.tokens.tfidf))
-
-
-
-train.tokens.tfidf.df <- cbind(Label = train$Label, data.frame(train.tokens.tfidf))
-names(train.tokens.tfidf.df) <- make.names(names(train.tokens.tfidf.df))
-
-
-gc()
-
-
-
-
-
-
- start.time <- Sys.time()
-
- rpart.cv.3 <- train(Label ~ ., data = train.tokens.tfidf.df, method = "rpart", 
-                     trControl = cv.cntrl, tuneLength = 7)
-
- total.time <- Sys.time() - start.time
- total.time
-
- rpart.cv.3
-
-
-
-
-
-
-
 library(irlba)
 
 
