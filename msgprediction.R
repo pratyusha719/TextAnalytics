@@ -293,7 +293,7 @@ registerDoSNOW(cl)
  start.time <- Sys.time()
 
 
-rf.cv.1 <- train(Label ~ ., data = train.svd, method = "rf", 
+rf.cv.1 <- train(Label ~ ., data = train.svd, method = "rpart", 
                  trControl = cv.cntrl, tuneLength = 7)
 
 
@@ -325,7 +325,7 @@ registerDoSNOW(cl)
 
 start.time <- Sys.time()
 
-rf.cv.2 <- train(Label ~ ., data = train.svd, method = "rf",
+rf.cv.2 <- train(Label ~ ., data = train.svd, method = "rpart",
                  trControl = cv.cntrl, tuneLength = 7, 
                  importance = TRUE)
 
@@ -381,7 +381,7 @@ registerDoSNOW(cl)
 start.time <- Sys.time()
  
 set.seed(932847)
-rf.cv.3 <- train(Label ~ ., data = train.svd, method = "rf",
+rf.cv.3 <- train(Label ~ ., data = train.svd, method = "rpart",
                  trControl = cv.cntrl, tuneLength = 7,
                  importance = TRUE)
 
@@ -423,22 +423,15 @@ test.tokens <- tokens_select(test.tokens, stopwords(),
 # Stemming.
 test.tokens <- tokens_wordstem(test.tokens, language = "english")
 
-# Add bigrams.
-test.tokens <- tokens_ngrams(test.tokens, n = 1:2)
 
-# Convert n-grams to quanteda document-term frequency matrix.
+# Convert to quanteda document-term frequency matrix.
 test.tokens.dfm <- dfm(test.tokens, tolower = FALSE)
 
 
 train.tokens.dfm
 test.tokens.dfm
 
-# we have to Ensure that the test dfm has the same n-grams as the training dfm.
-#
-# In production we should expect that new text messages will 
-#        contain n-grams that did not exist in the original training
-#        data. As such, we need to strip those n-grams out.
-#
+
 test.tokens.dfm <- dfm_select(test.tokens.dfm, pattern = train.tokens.dfm,
                               selection = "keep")
 test.tokens.matrix <- as.matrix(test.tokens.dfm)
@@ -529,7 +522,7 @@ registerDoSNOW(cl)
 start.time <- Sys.time()
 
 set.seed(254812)
-rf.cv.4 <- train(Label ~ ., data = train.svd, method = "rf",
+rf.cv.4 <- train(Label ~ ., data = train.svd, method = "rpart",
                   trControl = cv.cntrl, tuneLength = 7,
                   importance = TRUE)
 
