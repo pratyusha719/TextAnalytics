@@ -282,11 +282,6 @@ total.time
 rpart.cv.4
 
 
-
-
-# here we use randomforest algorithm
-
-
 cl <- makeCluster(3, type = "SOCK")
 registerDoSNOW(cl)
 
@@ -342,7 +337,7 @@ rf.cv.2
 confusionMatrix(train.svd$Label, rf.cv.2$finalModel$predicted)
 
 # we check which feature was most effective.
-library(randomForest)
+
 varImpPlot(rf.cv.1$finalModel)
 varImpPlot(rf.cv.2$finalModel)
 
@@ -399,7 +394,7 @@ confusionMatrix(train.svd$Label, rf.cv.3$finalModel$predicted)
 
 # this increased the specificity to 1
 #now we check how effective this featurewas.
-library(randomForest)
+
 varImpPlot(rf.cv.3$finalModel)
 
 
@@ -485,7 +480,7 @@ test.similarities <- cosine(t(test.similarities))
 test.svd$SpamSimilarity <- rep(0.0, nrow(test.svd))
 spam.cols <- (nrow(test.svd) + 1):ncol(test.similarities)
 for(i in 1:nrow(test.svd)) {
-  # The following line has the bug fix.
+ 
   test.svd$SpamSimilarity[i] <- mean(test.similarities[i, spam.cols])  
 }
 
@@ -494,7 +489,7 @@ for(i in 1:nrow(test.svd)) {
 test.svd$SpamSimilarity[!is.finite(test.svd$SpamSimilarity)] <- 0
 
 
-# predictions on the test data set using our trained random forest.
+# predictions on the test data set using our trained.
 preds <- predict(rf.cv.3, test.svd)
 
 
